@@ -1,0 +1,65 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-and-lint:
+    name: Lint & Test Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run linting check
+        run: |
+          # Stop build if there are Python syntax errors or undefined names
+          flake8 src tests --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Warning check for complexity
+          flake8 src tests --count --max-complexity=15 --max-line-length=127 --statistics
+
+      - name: Run Standalone Data Quality Checks
+        run: |
+          python dq_check.py --input ./data/raw --output ./reports/dq_report.json
+
+      - name: Execute Data Pipeline
+        run: |
+          python -m src.data.pipeline --raw-dir ./data/raw --db-path ./data/curated/supply_chain.duckdb
+
+      - name: Execute Full Test Suite
+        run: |
+          pytest tests/ -v
+
+  docker-build:
+    name: Build & Verify Docker Image
+    needs: test-and-lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: maersk-supply-chain-api:latest

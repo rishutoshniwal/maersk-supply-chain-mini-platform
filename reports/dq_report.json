@@ -1,0 +1,300 @@
+{
+  "generated_at": "2026-10-25T09:17:52.626601+00:00",
+  "input_directory": "./data/raw",
+  "summary": {
+    "total_datasets": 3,
+    "total_checks": 16,
+    "checks_passed": 0,
+    "checks_failed": 16,
+    "critical_issues": 7,
+    "warning_issues": 8,
+    "info_issues": 1,
+    "total_rows_inspected": 30053
+  },
+  "checks": [
+    {
+      "check_name": "ports_missing_country",
+      "dataset": "ports",
+      "severity": "warning",
+      "status": "FAIL",
+      "rows_affected": 1,
+      "total_rows": 25,
+      "percentage_affected": 4.0,
+      "recommended_action": "fix",
+      "reasoning": "Reference port missing country code ('BEANR' Antwerp). Affects geopolitical grouping and reporting; fix via UN/LOCODE reference imputation.",
+      "sample_affected_ids": [
+        "BEANR"
+      ]
+    },
+    {
+      "check_name": "shipments_duplicate_primary_key",
+      "dataset": "shipments",
+      "severity": "critical",
+      "status": "FAIL",
+      "rows_affected": 56,
+      "total_rows": 5028,
+      "percentage_affected": 1.11,
+      "recommended_action": "quarantine",
+      "reasoning": "Multiple rows share identical shipment_id with conflicting metadata/weights. Deduplicate by keeping latest valid booking date and quarantine conflicting versions.",
+      "sample_affected_ids": [
+        "SHP-00010",
+        "SHP-02149",
+        "SHP-03647",
+        "SHP-00275",
+        "SHP-03737"
+      ]
+    },
+    {
+      "check_name": "shipments_invalid_origin_port",
+      "dataset": "shipments",
+      "severity": "critical",
+      "status": "FAIL",
+      "rows_affected": 42,
+      "total_rows": 5028,
+      "percentage_affected": 0.84,
+      "recommended_action": "quarantine",
+      "reasoning": "Origin port codes not present in reference ports table (e.g. XXTST, ZZZZZ, UNKNW). Shipments cannot be assigned to physical terminal berths.",
+      "sample_affected_ids": [
+        "SHP-01578",
+        "SHP-04377",
+        "SHP-04347",
+        "SHP-01349",
+        "SHP-02753"
+      ]
+    },
+    {
+      "check_name": "shipments_invalid_destination_port",
+      "dataset": "shipments",
+      "severity": "critical",
+      "status": "FAIL",
+      "rows_affected": 55,
+      "total_rows": 5028,
+      "percentage_affected": 1.09,
+      "recommended_action": "quarantine",
+      "reasoning": "Destination port codes not present in reference ports table (e.g. XXTST, UNKNW, ZZZZZ). Shipments cannot clear customs or schedule delivery.",
+      "sample_affected_ids": [
+        "SHP-03125",
+        "SHP-02763",
+        "SHP-00679",
+        "SHP-02125",
+        "SHP-01100"
+      ]
+    },
+    {
+      "check_name": "shipments_non_positive_container_count",
+      "dataset": "shipments",
+      "severity": "critical",
+      "status": "FAIL",
+      "rows_affected": 23,
+      "total_rows": 5028,
+      "percentage_affected": 0.46,
+      "recommended_action": "quarantine",
+      "reasoning": "Container count is <= 0. Booking with zero containers violates physical transport requirements and vessel load limits.",
+      "sample_affected_ids": [
+        "SHP-02291",
+        "SHP-04667",
+        "SHP-00868",
+        "SHP-03058",
+        "SHP-00766"
+      ]
+    },
+    {
+      "check_name": "shipments_negative_or_zero_weight",
+      "dataset": "shipments",
+      "severity": "critical",
+      "status": "FAIL",
+      "rows_affected": 36,
+      "total_rows": 5028,
+      "percentage_affected": 0.72,
+      "recommended_action": "quarantine",
+      "reasoning": "Cargo weight <= 0 is physically impossible and violates maritime safety (SOLAS VGM convention). Indicates sensor or feed failure.",
+      "sample_affected_ids": [
+        "SHP-00617",
+        "SHP-02149",
+        "SHP-03447",
+        "SHP-03198",
+        "SHP-02112"
+      ]
+    },
+    {
+      "check_name": "shipments_null_weight",
+      "dataset": "shipments",
+      "severity": "warning",
+      "status": "FAIL",
+      "rows_affected": 73,
+      "total_rows": 5028,
+      "percentage_affected": 1.45,
+      "recommended_action": "flag",
+      "reasoning": "Missing cargo weight. Impute with median cargo weight per container grouped by cargo_type and flag row as estimated.",
+      "sample_affected_ids": [
+        "SHP-01495",
+        "SHP-03784",
+        "SHP-03225",
+        "SHP-04081",
+        "SHP-04525"
+      ]
+    },
+    {
+      "check_name": "shipments_inconsistent_cargo_type_casing",
+      "dataset": "shipments",
+      "severity": "warning",
+      "status": "FAIL",
+      "rows_affected": 261,
+      "total_rows": 5028,
+      "percentage_affected": 5.19,
+      "recommended_action": "fix",
+      "reasoning": "Cargo type values contain leading whitespace (' Chemicals') or non-standard casing ('FURNITURE', 'electronics'). Normalize via strip and title-case.",
+      "sample_affected_ids": [
+        "SHP-04150",
+        "SHP-00564",
+        "SHP-00957",
+        "SHP-03872",
+        "SHP-00365"
+      ]
+    },
+    {
+      "check_name": "shipments_missing_cargo_type",
+      "dataset": "shipments",
+      "severity": "warning",
+      "status": "FAIL",
+      "rows_affected": 15,
+      "total_rows": 5028,
+      "percentage_affected": 0.3,
+      "recommended_action": "flag",
+      "reasoning": "Cargo type is missing. Assign to 'Unknown' category to retain shipment for route-level metric aggregation.",
+      "sample_affected_ids": [
+        "SHP-03647",
+        "SHP-00275",
+        "SHP-03887",
+        "SHP-03280",
+        "SHP-04906"
+      ]
+    },
+    {
+      "check_name": "shipments_inconsistent_status_values",
+      "dataset": "shipments",
+      "severity": "warning",
+      "status": "FAIL",
+      "rows_affected": 92,
+      "total_rows": 5028,
+      "percentage_affected": 1.83,
+      "recommended_action": "fix",
+      "reasoning": "Non-canonical status representations ('COMPLETED', 'Complete', 'delivered'). Standardize to canonical uppercase vocabulary.",
+      "sample_affected_ids": [
+        "SHP-04428",
+        "SHP-04491",
+        "SHP-03880",
+        "SHP-00906",
+        "SHP-02868"
+      ]
+    },
+    {
+      "check_name": "shipments_missing_status",
+      "dataset": "shipments",
+      "severity": "warning",
+      "status": "FAIL",
+      "rows_affected": 54,
+      "total_rows": 5028,
+      "percentage_affected": 1.07,
+      "recommended_action": "fix",
+      "reasoning": "Missing shipment status. Infer from actual delivery timestamps or classify as 'UNKNOWN' pending reconciliation.",
+      "sample_affected_ids": [
+        "SHP-00477",
+        "SHP-04876",
+        "SHP-04899",
+        "SHP-03523",
+        "SHP-01135"
+      ]
+    },
+    {
+      "check_name": "shipments_departure_before_booking_anomaly",
+      "dataset": "shipments",
+      "severity": "critical",
+      "status": "FAIL",
+      "rows_affected": 39,
+      "total_rows": 5028,
+      "percentage_affected": 0.78,
+      "recommended_action": "quarantine",
+      "reasoning": "Temporal paradox: vessel actual_departure is recorded before booking_date. Indicates back-dated booking or event clock desynchronization.",
+      "sample_affected_ids": [
+        "SHP-03067",
+        "SHP-02768",
+        "SHP-00765",
+        "SHP-01157",
+        "SHP-02100"
+      ]
+    },
+    {
+      "check_name": "shipments_completed_status_missing_arrival_timestamp",
+      "dataset": "shipments",
+      "severity": "warning",
+      "status": "FAIL",
+      "rows_affected": 92,
+      "total_rows": 5028,
+      "percentage_affected": 1.83,
+      "recommended_action": "flag",
+      "reasoning": "Shipment is marked delivered or completed, yet actual_arrival is NULL. Flag for logistics milestone reconciliation.",
+      "sample_affected_ids": [
+        "SHP-04428",
+        "SHP-04491",
+        "SHP-03880",
+        "SHP-00906",
+        "SHP-02868"
+      ]
+    },
+    {
+      "check_name": "port_events_duplicate_event_id",
+      "dataset": "port_events",
+      "severity": "critical",
+      "status": "FAIL",
+      "rows_affected": 206,
+      "total_rows": 25000,
+      "percentage_affected": 0.82,
+      "recommended_action": "fix",
+      "reasoning": "Event IDs are duplicated across distinct event payloads (ID generation collision). Generate synthetic composite UUIDs upon ingestion.",
+      "sample_affected_ids": [
+        "EVT-006658",
+        "EVT-008392",
+        "EVT-012052",
+        "EVT-012512",
+        "EVT-009897"
+      ]
+    },
+    {
+      "check_name": "port_events_missing_event_type",
+      "dataset": "port_events",
+      "severity": "warning",
+      "status": "FAIL",
+      "rows_affected": 140,
+      "total_rows": 25000,
+      "percentage_affected": 0.56,
+      "recommended_action": "fix",
+      "reasoning": "Event record missing event_type. Can be inferred from operational notes (e.g. weather/congestion notes -> DELAYED) or defaulted to UNKNOWN.",
+      "sample_affected_ids": [
+        "EVT-000127",
+        "EVT-005287",
+        "EVT-020782",
+        "EVT-012288",
+        "EVT-006843"
+      ]
+    },
+    {
+      "check_name": "port_events_missing_notes",
+      "dataset": "port_events",
+      "severity": "info",
+      "status": "FAIL",
+      "rows_affected": 1913,
+      "total_rows": 25000,
+      "percentage_affected": 7.65,
+      "recommended_action": "fix",
+      "reasoning": "Notes column is NULL in event feed. Contextual text is optional; populate with empty string in curated table to ensure null-safety.",
+      "sample_affected_ids": [
+        "EVT-013014",
+        "EVT-004196",
+        "EVT-004718",
+        "EVT-000658",
+        "EVT-007497"
+      ]
+    }
+  ]
+}

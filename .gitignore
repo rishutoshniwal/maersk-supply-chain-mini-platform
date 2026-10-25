@@ -1,0 +1,29 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Environments
+.env
+.venv/
+venv/
+ENV/
+env/
+
+# IDE & OS
+.DS_Store
+.idea/
+.vscode/
+
+# DuckDB lock/temp files (curated db can be built via make pipeline or container entrypoint)
+*.duckdb.tmp
+*.duckdb.wal
+
+# Local audit logs
+logs/assistant_audit.jsonl

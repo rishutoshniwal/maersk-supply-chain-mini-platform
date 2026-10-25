@@ -1,0 +1,19 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: maersk-supply-chain-api:latest
+    container_name: supply_chain_api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_PATH=/app/data/curated/supply_chain.duckdb
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s

@@ -1,0 +1,248 @@
+{
+  "model_version": "1.0.0",
+  "trained_at": "2026-10-25T09:23:06.439063+00:00",
+  "selected_model": "HistGradientBoosting",
+  "leakage_guarantee": "Booking-time features only. Actual departure/arrival excluded.",
+  "features": {
+    "numerical": [
+      "container_count",
+      "weight_tons",
+      "weight_per_container",
+      "planned_transit_days",
+      "booking_lead_days",
+      "origin_congestion_score",
+      "dest_congestion_score",
+      "booking_month",
+      "booking_day_of_week",
+      "planned_dep_month",
+      "planned_dep_day_of_week"
+    ],
+    "categorical": [
+      "origin_port",
+      "destination_port",
+      "cargo_type",
+      "origin_region",
+      "dest_region"
+    ],
+    "all": [
+      "container_count",
+      "weight_tons",
+      "weight_per_container",
+      "planned_transit_days",
+      "booking_lead_days",
+      "origin_congestion_score",
+      "dest_congestion_score",
+      "booking_month",
+      "booking_day_of_week",
+      "planned_dep_month",
+      "planned_dep_day_of_week",
+      "origin_port",
+      "destination_port",
+      "cargo_type",
+      "origin_region",
+      "dest_region"
+    ]
+  },
+  "target": "is_delayed_gt_24h (actual_delay_hours > 24)",
+  "train_samples": 3577,
+  "test_samples": 895,
+  "evaluation_metrics": {
+    "model_name": "HistGradientBoosting",
+    "accuracy": 0.5385,
+    "precision": 0.4297,
+    "recall": 0.4404,
+    "f1": 0.435,
+    "roc_auc": 0.5223,
+    "pr_auc": 0.4265,
+    "brier_score": 0.2638,
+    "confusion_matrix": [
+      [
+        323,
+        211
+      ],
+      [
+        202,
+        159
+      ]
+    ]
+  },
+  "all_model_evaluations": {
+    "LogisticRegression": {
+      "model_name": "LogisticRegression",
+      "accuracy": 0.4872,
+      "precision": 0.3901,
+      "recall": 0.482,
+      "f1": 0.4312,
+      "roc_auc": 0.4792,
+      "pr_auc": 0.3968,
+      "brier_score": 0.2571,
+      "confusion_matrix": [
+        [
+          262,
+          272
+        ],
+        [
+          187,
+          174
+        ]
+      ]
+    },
+    "HistGradientBoosting": {
+      "model_name": "HistGradientBoosting",
+      "accuracy": 0.5385,
+      "precision": 0.4297,
+      "recall": 0.4404,
+      "f1": 0.435,
+      "roc_auc": 0.5223,
+      "pr_auc": 0.4265,
+      "brier_score": 0.2638,
+      "confusion_matrix": [
+        [
+          323,
+          211
+        ],
+        [
+          202,
+          159
+        ]
+      ]
+    },
+    "RandomForest": {
+      "model_name": "RandomForest",
+      "accuracy": 0.5106,
+      "precision": 0.4005,
+      "recall": 0.4294,
+      "f1": 0.4144,
+      "roc_auc": 0.4927,
+      "pr_auc": 0.4051,
+      "brier_score": 0.2504,
+      "confusion_matrix": [
+        [
+          302,
+          232
+        ],
+        [
+          206,
+          155
+        ]
+      ]
+    }
+  },
+  "port_metadata_cache": {
+    "SGSIN": {
+      "region": "APAC",
+      "avg_congestion_score": 0.72
+    },
+    "CNSHA": {
+      "region": "APAC",
+      "avg_congestion_score": 0.85
+    },
+    "CNSZX": {
+      "region": "APAC",
+      "avg_congestion_score": 0.78
+    },
+    "CNNGB": {
+      "region": "APAC",
+      "avg_congestion_score": 0.7
+    },
+    "HKHKG": {
+      "region": "APAC",
+      "avg_congestion_score": 0.65
+    },
+    "KRPUS": {
+      "region": "APAC",
+      "avg_congestion_score": 0.6
+    },
+    "JPYOK": {
+      "region": "APAC",
+      "avg_congestion_score": 0.55
+    },
+    "INNSA": {
+      "region": "APAC",
+      "avg_congestion_score": 0.75
+    },
+    "INMUN": {
+      "region": "APAC",
+      "avg_congestion_score": 0.68
+    },
+    "AEDXB": {
+      "region": "MEA",
+      "avg_congestion_score": 0.62
+    },
+    "NLRTM": {
+      "region": "EUR",
+      "avg_congestion_score": 0.8
+    },
+    "DEHAM": {
+      "region": "EUR",
+      "avg_congestion_score": 0.72
+    },
+    "BEANR": {
+      "region": "EUR",
+      "avg_congestion_score": 0.7
+    },
+    "GBFXT": {
+      "region": "EUR",
+      "avg_congestion_score": 0.66
+    },
+    "ESVLC": {
+      "region": "EUR",
+      "avg_congestion_score": 0.58
+    },
+    "USLAX": {
+      "region": "AMER",
+      "avg_congestion_score": 0.82
+    },
+    "USLGB": {
+      "region": "AMER",
+      "avg_congestion_score": 0.8
+    },
+    "USNYC": {
+      "region": "AMER",
+      "avg_congestion_score": 0.68
+    },
+    "USSAV": {
+      "region": "AMER",
+      "avg_congestion_score": 0.6
+    },
+    "BRSSZ": {
+      "region": "AMER",
+      "avg_congestion_score": 0.72
+    },
+    "ZADUR": {
+      "region": "MEA",
+      "avg_congestion_score": 0.55
+    },
+    "MYPKG": {
+      "region": "APAC",
+      "avg_congestion_score": 0.67
+    },
+    "THBKK": {
+      "region": "APAC",
+      "avg_congestion_score": 0.6
+    },
+    "PKKAR": {
+      "region": "APAC",
+      "avg_congestion_score": 0.73
+    },
+    "EGPSD": {
+      "region": "MEA",
+      "avg_congestion_score": 0.68
+    }
+  },
+  "production_monitoring": {
+    "metrics_to_track": [
+      "ROC-AUC on rolling 30-day arrived shipments",
+      "F1-score and Precision/Recall curve",
+      "Population Stability Index (PSI) on weight_tons and congestion scores",
+      "Feature drift Kolmogorov-Smirnov test (p-value < 0.05)",
+      "Prediction drift (mean predicted delay probability vs historical baseline)"
+    ],
+    "retrain_triggers": [
+      "Rolling ROC-AUC drops below 0.65",
+      "Feature drift PSI exceeds 0.25 on primary numerical features",
+      "New port or regional conflict introduces persistent route disruptions",
+      "Scheduled bi-weekly retraining cadence with newly confirmed shipment actuals"
+    ]
+  }
+}
