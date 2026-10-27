@@ -117,6 +117,30 @@ curl -s http://localhost:8000/data-quality/report | jq '.summary'
 
 ---
 
+### Postman Collection (Direct Import)
+A ready-to-use Postman collection is included in the root directory: [`postman_collection.json`](postman_collection.json).
+
+- **How to Import**: Open Postman → Click **Import** (top left) → Select or drag-and-drop `postman_collection.json`.
+- **Preconfigured Environment Variable**: `{{baseUrl}}` is preset to `http://localhost:8000`.
+- **Organized Folders & 12 Requests**:
+  1. **1. System Health**: `GET /health`
+  2. **2. Shipments**: 
+     - `GET /shipments` (default pagination)
+     - `GET /shipments` (filter by status: `DELAYED`)
+     - `GET /shipments` (filter by origin port: `CNSHA`)
+     - `GET /shipments/{id}` (`SHP-00040`)
+     - `GET /shipments/{id}` (404 unknown ID error test)
+  3. **3. Route Analytics**: 
+     - `GET /routes/CNSHA/NLRTM/stats` (Shanghai to Rotterdam)
+     - `GET /routes/USLAX/PKKAR/stats` (Los Angeles to Karachi)
+  4. **4. ML Delay Risk Prediction**: 
+     - `POST /predict-delay` (by existing shipment ID)
+     - `POST /predict-delay` (by booking-time feature payload)
+     - `POST /predict-delay` (422 validation error test)
+  5. **5. Data Quality**: `GET /data-quality/report`
+
+---
+
 ## 2. Architecture Diagram
 
 ```mermaid

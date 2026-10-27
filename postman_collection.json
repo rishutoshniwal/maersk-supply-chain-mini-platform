@@ -1,0 +1,320 @@
+{
+  "info": {
+    "_postman_id": "b3e64810-9b5a-4e2a-89a1-7788cb991122",
+    "name": "Maersk Supply Chain Intelligence API",
+    "description": "Postman Collection for Maersk Supply Chain Intelligence Mini-Platform REST API.\n\nIncludes endpoints for:\n- Liveness and readiness health checks\n- Shipment details and multi-filter paginated queries\n- Aggregated route analytics and on-time performance\n- Booking-time ML delay risk prediction\n- Machine-readable Data Quality profiling report",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. System Health",
+      "item": [
+        {
+          "name": "GET /health - Service Liveness & Readiness",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Checks API service status, DuckDB database connection, and ML model loaded state."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Shipments",
+      "item": [
+        {
+          "name": "GET /shipments - List Shipments (Default Pagination)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shipments?page=1&page_size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["shipments"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Lists shipments with 1-based pagination."
+          }
+        },
+        {
+          "name": "GET /shipments - Filter by Status (DELAYED)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shipments?status=DELAYED&page=1&page_size=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["shipments"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "DELAYED"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Filter shipments by status (DELIVERED, DELAYED, CANCELLED)."
+          }
+        },
+        {
+          "name": "GET /shipments - Filter by Origin Port (CNSHA)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shipments?origin=CNSHA&page=1&page_size=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["shipments"],
+              "query": [
+                {
+                  "key": "origin",
+                  "value": "CNSHA"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Filter shipments by origin port code."
+          }
+        },
+        {
+          "name": "GET /shipments/{id} - Get Shipment Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shipments/SHP-00040",
+              "host": ["{{baseUrl}}"],
+              "path": ["shipments", "SHP-00040"]
+            },
+            "description": "Retrieves full details for a shipment including derived actual_delay_hours, on_time_flag, and transit_days."
+          }
+        },
+        {
+          "name": "GET /shipments/{id} - 404 Unknown Shipment ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shipments/SHP-UNKNOWN-99999",
+              "host": ["{{baseUrl}}"],
+              "path": ["shipments", "SHP-UNKNOWN-99999"]
+            },
+            "description": "Tests structured JSON error response when an unknown shipment ID is requested."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Route Analytics",
+      "item": [
+        {
+          "name": "GET /routes/{origin}/{destination}/stats - Shanghai to Rotterdam",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/routes/CNSHA/NLRTM/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["routes", "CNSHA", "NLRTM", "stats"]
+            },
+            "description": "Aggregated route performance: average delay hours, on-time rate, shipment count, and actual transit days."
+          }
+        },
+        {
+          "name": "GET /routes/{origin}/{destination}/stats - Los Angeles to Karachi",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/routes/USLAX/PKKAR/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["routes", "USLAX", "PKKAR", "stats"]
+            },
+            "description": "Aggregated route performance for USLAX → PKKAR."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. ML Delay Risk Prediction",
+      "item": [
+        {
+          "name": "POST /predict-delay - By Existing Shipment ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shipment_id\": \"SHP-00040\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/predict-delay",
+              "host": ["{{baseUrl}}"],
+              "path": ["predict-delay"]
+            },
+            "description": "Predicts delay risk using booking attributes pulled automatically for an existing shipment ID."
+          }
+        },
+        {
+          "name": "POST /predict-delay - By Booking-Time Attributes",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"origin_port\": \"CNSHA\",\n  \"destination_port\": \"NLRTM\",\n  \"cargo_type\": \"Electronics\",\n  \"container_count\": 50,\n  \"weight_tons\": 1200.0,\n  \"booking_date\": \"2025-06-01 10:00:00\",\n  \"planned_departure\": \"2025-06-08 10:00:00\",\n  \"planned_arrival\": \"2025-07-05 10:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/predict-delay",
+              "host": ["{{baseUrl}}"],
+              "path": ["predict-delay"]
+            },
+            "description": "Scores a prospective booking against the trained ML model with zero data leakage."
+          }
+        },
+        {
+          "name": "POST /predict-delay - 422 Validation Error Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/predict-delay",
+              "host": ["{{baseUrl}}"],
+              "path": ["predict-delay"]
+            },
+            "description": "Tests validation error response when neither shipment_id nor origin/destination are provided."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Data Quality",
+      "item": [
+        {
+          "name": "GET /data-quality/report - Machine-Readable DQ Audit",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/data-quality/report",
+              "host": ["{{baseUrl}}"],
+              "path": ["data-quality", "report"]
+            },
+            "description": "Returns the complete 16-check Data Quality profiling report in JSON format."
+          }
+        }
+      ]
+    }
+  ]
+}
