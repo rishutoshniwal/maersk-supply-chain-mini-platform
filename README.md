@@ -1,6 +1,6 @@
 # Supply Chain Intelligence Mini-Platform
 
-[![CI Pipeline](https://github.com/maersk/supply-chain-mini-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/maersk/supply-chain-mini-platform/actions)
+[![CI Pipeline](https://github.com/rishutoshniwal/maersk-supply-chain-mini-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/rishutoshniwal/maersk-supply-chain-mini-platform/actions)
 ![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)
 ![DuckDB](https://img.shields.io/badge/DuckDB-1.0+-FFF000.svg)
