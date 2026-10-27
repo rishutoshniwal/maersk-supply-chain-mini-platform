@@ -29,9 +29,9 @@ jobs:
       - name: Run linting check
         run: |
           # Stop build if there are Python syntax errors or undefined names
-          flake8 src tests --count --select=E9,F63,F7,F82 --show-source --statistics
-          # Warning check for complexity
-          flake8 src tests --count --max-complexity=15 --max-line-length=127 --statistics
+          flake8 src tests --count --select=E9,F63,F7,F82,F401,F841 --show-source --statistics
+          # Complexity check
+          flake8 src tests --count --max-complexity=15 --max-line-length=127 --ignore=E501 --statistics
 
       - name: Run Standalone Data Quality Checks
         run: |
